@@ -1,8 +1,8 @@
 const KM_PER_MILE = 1.60934
 const MAX_DISTANCE_MILES = 200
 const MAX_DISTANCE_KM = MAX_DISTANCE_MILES * KM_PER_MILE // ~322 km
-const MAX_DISTANCE_SCORE = 500
-const MAX_TIME_BONUS = 500
+const MAX_DISTANCE_SCORE = 700  // Distance weighted more heavily (70%)
+const MAX_TIME_BONUS = 300      // Time bonus (30%)
 const TIMER_DURATION = 30
 
 /**
@@ -59,13 +59,13 @@ export function calculateScore(guessLat, guessLng, actualLat, actualLng, remaini
   const distanceKm = calculateDistanceKm(guessLat, guessLng, actualLat, actualLng)
   const distanceMiles = distanceKm / KM_PER_MILE
 
-  // Distance score: max(0, round(500 × (1 - distanceKm / 322)))
+  // Distance score: max(0, round(700 × (1 - distanceKm / 322)))
   const distanceScore = Math.max(
     0,
     Math.round(MAX_DISTANCE_SCORE * (1 - distanceKm / MAX_DISTANCE_KM))
   )
 
-  // Time bonus: round((remainingSeconds / 30) × 500)
+  // Time bonus: round((remainingSeconds / 30) × 300)
   const timeBonus = Math.round((remainingSeconds / TIMER_DURATION) * MAX_TIME_BONUS)
 
   // Total score

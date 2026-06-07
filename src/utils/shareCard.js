@@ -58,7 +58,7 @@ export function buildShareText({ dayNumber, timeElapsed, distanceMiles, totalSco
     `📍 ${distanceEmoji}  ${distanceText}`,
     `✨ ${scoreEmoji}  ${totalScore} / 1000`,
     '',
-    'pintaiwan.vercel.app'
+    'https://pintaiwan.vercel.app'
   ]
 
   return lines.join('\n')
