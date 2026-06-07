@@ -1,9 +1,8 @@
 const KM_PER_MILE = 1.60934
-const MAX_DISTANCE_MILES = 200
-const MAX_DISTANCE_KM = MAX_DISTANCE_MILES * KM_PER_MILE // ~322 km
 const MAX_DISTANCE_SCORE = 700  // Distance weighted more heavily (70%)
 const MAX_TIME_BONUS = 300      // Time bonus (30%)
 const TIMER_DURATION = 30
+const DECAY_CONSTANT = 30       // Miles at which score drops to ~37% (exponential decay)
 
 /**
  * Calculate distance between two lat/lng points using Haversine formula
@@ -59,10 +58,10 @@ export function calculateScore(guessLat, guessLng, actualLat, actualLng, remaini
   const distanceKm = calculateDistanceKm(guessLat, guessLng, actualLat, actualLng)
   const distanceMiles = distanceKm / KM_PER_MILE
 
-  // Distance score: max(0, round(700 × (1 - distanceKm / 322)))
-  const distanceScore = Math.max(
-    0,
-    Math.round(MAX_DISTANCE_SCORE * (1 - distanceKm / MAX_DISTANCE_KM))
+  // Distance score: exponential decay - 700 × e^(-miles/30)
+  // Drops sharply: 10mi=502, 38mi=197, 100mi=25
+  const distanceScore = Math.round(
+    MAX_DISTANCE_SCORE * Math.exp(-distanceMiles / DECAY_CONSTANT)
   )
 
   // Time bonus: round((remainingSeconds / 30) × 300)
