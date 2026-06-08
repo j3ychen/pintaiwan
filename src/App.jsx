@@ -280,9 +280,9 @@ function App() {
             center={actualLocation}
             zoom={7}
             className="results-map"
-            zoomControl={false}
-            dragging={false}
-            scrollWheelZoom={false}
+            zoomControl={true}
+            dragging={true}
+            scrollWheelZoom={true}
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
