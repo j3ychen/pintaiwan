@@ -245,6 +245,13 @@ function App() {
             {streak > 1 ? `${streak} day streak` : streak === 1 ? '1 day streak' : 'First play!'}
           </p>
         </div>
+
+        <footer className="app-footer landing-footer">
+          <p>© {new Date().getFullYear()} PinTaiwan</p>
+          <p className="footer-disclaimer">
+            For entertainment purposes only. Not affiliated with any government entity.
+          </p>
+        </footer>
       </div>
     )
   }
@@ -264,6 +271,7 @@ function App() {
     return (
       <div className="app results-view">
         <div className="results-header">
+          <span className="header-brand">PinTaiwan</span>
           <div className="town-pill">
             {dailyTown.nameRomanized}
           </div>
@@ -365,6 +373,14 @@ function App() {
             </button>
           </div>
         )}
+
+        <footer className="app-footer">
+          <p>© {new Date().getFullYear()} PinTaiwan. All rights reserved.</p>
+          <p className="footer-disclaimer">
+            Map data © OpenStreetMap contributors. Town data is approximate and for entertainment purposes only.
+            Not affiliated with any government entity.
+          </p>
+        </footer>
       </div>
     )
   }
@@ -373,6 +389,7 @@ function App() {
   return (
     <div className="app">
       <div className="header">
+        <span className="header-brand">PinTaiwan</span>
         <div className="town-pill">
           {dailyTown.nameRomanized}
         </div>
