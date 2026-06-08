@@ -94,3 +94,30 @@ export async function copyToClipboard(text) {
     return false
   }
 }
+
+/**
+ * Share result using Web Share API with fallback to clipboard
+ * @param {string} text - Text to share
+ * @returns {Promise<{method: 'share'|'clipboard'|'fallback', success: boolean}>}
+ */
+export async function shareResult(text) {
+  // Try Web Share API first (mobile/desktop share dialogs)
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'PinTaiwan',
+        text: text
+      })
+      return { method: 'share', success: true }
+    } catch (err) {
+      // User cancelled or share failed, fall through to clipboard
+      if (err.name === 'AbortError') {
+        return { method: 'share', success: false }
+      }
+    }
+  }
+
+  // Fallback to clipboard
+  const success = await copyToClipboard(text)
+  return { method: 'clipboard', success }
+}

@@ -15,7 +15,7 @@ import {
   getTimeUntilMidnight,
   formatCountdown
 } from './utils/streak'
-import { buildShareText, copyToClipboard } from './utils/shareCard'
+import { buildShareText, shareResult } from './utils/shareCard'
 import './App.css'
 
 const TIMER_DURATION = 30
@@ -109,7 +109,7 @@ function App() {
   const [submittedSeconds, setSubmittedSeconds] = useState(savedResults?.submittedSeconds ?? 0)
   const [streak, setStreak] = useState(getStreak())
   const [countdown, setCountdown] = useState(formatCountdown(getTimeUntilMidnight()))
-  const [shareButtonText, setShareButtonText] = useState('Share Result')
+  const [shareButtonText, setShareButtonText] = useState('Share')
   const [showShareFallback, setShowShareFallback] = useState(false)
 
   const dailyTown = getDailyTown()
@@ -204,13 +204,18 @@ function App() {
       totalScore: score?.total ?? 0
     })
 
-    const success = await copyToClipboard(shareText)
+    const result = await shareResult(shareText)
 
-    if (success) {
+    if (result.method === 'share') {
+      // Native share dialog was used
+      if (result.success) {
+        setShareButtonText('Shared!')
+        setTimeout(() => setShareButtonText('Share'), 2000)
+      }
+    } else if (result.success) {
+      // Clipboard fallback worked
       setShareButtonText('Copied!')
-      setTimeout(() => {
-        setShareButtonText('Share Result')
-      }, 2000)
+      setTimeout(() => setShareButtonText('Share'), 2000)
     } else {
       // Show fallback textarea
       setShowShareFallback(true)
@@ -262,6 +267,12 @@ function App() {
           <div className="town-pill">
             {dailyTown.nameRomanized}
           </div>
+          <button
+            className={`header-share-button ${shareButtonText !== 'Share' ? 'copied' : ''}`}
+            onClick={handleShare}
+          >
+            {shareButtonText}
+          </button>
         </div>
 
         <div className="results-map-container">
@@ -331,13 +342,6 @@ function App() {
           <p className="next-town-label">Next town in</p>
           <p className="next-town-countdown">{countdown}</p>
         </div>
-
-        <button
-          className={`share-button ${shareButtonText === 'Copied!' ? 'copied' : ''}`}
-          onClick={handleShare}
-        >
-          {shareButtonText}
-        </button>
 
         {showShareFallback && (
           <div className="share-fallback">
